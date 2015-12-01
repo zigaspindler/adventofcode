@@ -26,7 +26,7 @@ input = '(((())))()((((((((())()(()))(()((((()(()(((()((()((()(()()()()()))(((()
 floor = 0
 
 input.each_char do |char|
-	char == '(' ? floor += 1 : floor -= 1
+  char == '(' ? floor += 1 : floor -= 1
 end
 
 puts floor

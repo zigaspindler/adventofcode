@@ -13,10 +13,10 @@ input = '(((())))()((((((((())()(()))(()((((()(()(((()((()((()(()()()()()))(((()
 floor = 0
 
 input.each_char.with_index do |char, index|
-	char == '(' ? floor += 1 : floor -= 1
+  char == '(' ? floor += 1 : floor -= 1
 
-	if floor == -1
-		puts index + 1
-		break
-	end
+  if floor == -1
+    puts index + 1
+    break
+  end
 end
