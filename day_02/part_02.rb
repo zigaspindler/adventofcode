@@ -14,7 +14,7 @@ output = 0
 
 File.open('input.txt', 'r') do |input|
   while (line = input.gets)
-    sizes = line.split('x').map { |i| i.to_i }.sort
+    sizes = line.chomp.split('x').map { |i| i.to_i }.sort
     output += sizes.inject(:*) + 2 * sizes[0] + 2 * sizes[1]
   end
 end

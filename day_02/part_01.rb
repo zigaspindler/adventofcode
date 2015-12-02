@@ -14,7 +14,7 @@ output = 0
 
 File.open('input.txt', 'r') do |input|
   while (line = input.gets)
-    sizes = line.split('x').map { |i| i.to_i }
+    sizes = line.chomp.split('x').map { |i| i.to_i }
 
     sides = [
       sizes[0] * sizes[1],
