@@ -25,7 +25,7 @@ File.open('input.txt', 'r') do |input|
   while (line = input.gets)
     line.chomp!
     original += line.size
-    new_string += line.gsub(/(\\x..|\\.)/, 'a').gsub('"', '').size
+    new_string += eval(line).size
   end
 end
 
