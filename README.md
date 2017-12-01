@@ -1,1 +1,1 @@
-Ruby implementation of http://adventofcode.com/
+My take on http://adventofcode.com/ using Ruby and Elixir
