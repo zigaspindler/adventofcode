@@ -63,6 +63,10 @@ class Guard
   def sorting
     @sorting ||= @minutes.inject(:+)
   end
+
+  def to_s
+    minutes.each_with_index.max[1] * id.to_i
+  end
 end
 
 guards = {}
@@ -70,18 +74,17 @@ current_guard = nil
 current_start = nil
 
 lines = File.readlines('input.txt').sort.each do |line|
-  match = /\[.+:(\d\d)\](?:.+#(\d+).+| (.+) .+)/.match(line.strip)
+  _, minutes, id, action = * /\[.+:(\d\d)\](?:.+#(\d+).+| (.+) .+)/.match(line.strip)
 
-  if match[2] # new guard
-    current_guard = guards[match[2]] ||= Guard.new(match[2])
+  if id # new guard
+    current_guard = guards[id] ||= Guard.new(id)
   else
-    if match[3] == 'falls'
-      current_start = match[1]
+    if action == 'falls'
+      current_start = minutes
     else
-      current_guard.add_minutes(current_start, match[1])
+      current_guard.add_minutes(current_start, minutes)
     end
   end
 end
 
-sleepy_guard = guards.sort_by{ |k, v| -v.sorting }.first[1]
-p sleepy_guard.minutes.each_with_index.max[1] * sleepy_guard.id.to_i
+p guards.sort_by{ |k, v| -v.sorting }.first[1].to_s
