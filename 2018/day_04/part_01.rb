@@ -73,12 +73,7 @@ lines = File.readlines('input.txt').sort.each do |line|
   match = /\[.+:(\d\d)\](?:.+#(\d+).+| (.+) .+)/.match(line.strip)
 
   if match[2] # new guard
-    current_guard = guards[match[2]]
-
-    next if current_guard
-    
-    current_guard = Guard.new(match[2])
-    guards[match[2]] = current_guard
+    current_guard = guards[match[2]] ||= Guard.new(match[2])
   else
     if match[3] == 'falls'
       current_start = match[1]
