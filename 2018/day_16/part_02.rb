@@ -37,7 +37,7 @@ while opcodes.any?
   
     if local_counter == 1
       mapped[command.first] = local_opcode
-      opcodes -= [local_opcode]
+      opcodes.delete(local_opcode)
     end
   end
 end
