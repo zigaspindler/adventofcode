@@ -10,7 +10,7 @@ counter = 0
 mapped = {}
 opcodes = OPCODES
 
-while mapped.size < 16
+while opcodes.any?
   File.readlines('input_part_01.txt').each_slice(4) do |lines|
     break unless lines.first.start_with?('Before')
   
