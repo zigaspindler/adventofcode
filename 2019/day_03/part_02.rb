@@ -91,7 +91,6 @@ a, b =  File.read('input.txt').strip.split("\n")
 
 path_a = get_path(a).sort
 path_b = get_path(b).sort
-# p res
 
 min = nil
 
