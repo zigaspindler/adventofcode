@@ -52,15 +52,11 @@ opcodes = input.split(',').map(&:to_i)
 def add(command, opcodes)
   a, b, target = get_params(command, opcodes)
   opcodes[target] = a + b
-
-  opcodes
 end
 
 def multiply(command, opcodes)
   a, b, target = get_params(command, opcodes)
   opcodes[target] = a * b
-
-  opcodes
 end
 
 def get_params(command, opcodes)
@@ -79,10 +75,10 @@ loop do
 
   case command[0].digits.first
   when 1
-    opcodes = add(command, opcodes)
+    add(command, opcodes)
     position += 4
   when 2
-    opcodes = multiply(command, opcodes)
+    multiply(command, opcodes)
     position += 4
   when 3
     opcodes[command[1]] = 1
