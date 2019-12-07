@@ -113,14 +113,14 @@ end
 max_thrust = 0
 
 [5, 6, 7, 8, 9].permutation.each do |per|
-  channels = per.map { |phase_setting| Queue.new.push(phase_setting) }
+  channels = per.map { |input| Queue.new.push(input) }
 
   threads = per.map.with_index { |_,i|
     Thread.new do
       run(
         original_opcodes.dup,
         channels[i],
-        channels[(i + 1)%channels.length]
+        channels[(i + 1) % channels.length]
       )
     end
   }
@@ -131,4 +131,5 @@ max_thrust = 0
 
   max_thrust = thrust if thrust > max_thrust
 end
+
 p max_thrust
