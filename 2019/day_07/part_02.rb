@@ -89,7 +89,6 @@ def run(opcodes, input, output)
       position += 4
     when 3
       opcodes[command[1]] = input.shift
-      used_input = true
       position += 2
     when 4
       a, _, _ = get_params(command, opcodes)
@@ -106,7 +105,7 @@ def run(opcodes, input, output)
       equals(command, opcodes)
       position += 4
     else
-      return opcodes, nil, position, used_input
+      break
     end
   end
 end
@@ -114,7 +113,7 @@ end
 max_thrust = 0
 
 [5, 6, 7, 8, 9].permutation.each do |per|
-channels = per.map { |phase_setting| Queue.new.push(phase_setting) }
+  channels = per.map { |phase_setting| Queue.new.push(phase_setting) }
 
   threads = per.map.with_index { |_,i|
     Thread.new do
