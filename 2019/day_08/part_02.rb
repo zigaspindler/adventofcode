@@ -29,11 +29,10 @@
 # What message is produced after decoding your image?
 
 class Layer
-  attr_accessor :pixels, :zeros
+  attr_accessor :pixels
 
   def initialize(string)
     @pixels = string.split('').map(&:to_i)
-    @zeros = @pixels.count(0)
   end
 end
 
