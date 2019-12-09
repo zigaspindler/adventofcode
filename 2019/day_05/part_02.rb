@@ -34,79 +34,13 @@
 
 # What is the diagnostic code for system ID 5?
 
-input = File.read('input.txt').strip
+require '../lib/intcode'
 
+input = File.read('input.txt').strip
 opcodes = input.split(',').map(&:to_i)
 
-def add(command, opcodes)
-  a, b, target = get_params(command, opcodes)
-  opcodes[target] = a + b
-end
+output = []
 
-def multiply(command, opcodes)
-  a, b, target = get_params(command, opcodes)
-  opcodes[target] = a * b
-end
+Intcode.new(opcodes, input: [5], output: output).run
 
-def jump_if_true(command, opcodes, position)
-  a, b, _ = get_params(command, opcodes)
-  a != 0 ? b : (position + 3)
-end
-
-def jump_if_false(command, opcodes, position)
-  a, b, _ = get_params(command, opcodes)
-  a == 0 ? b : (position + 3)
-end
-
-def less_than(command, opcodes)
-  a, b, target = get_params(command, opcodes)
-  opcodes[target] = a < b ? 1 : 0
-end
-
-def equals(command, opcodes)
-  a, b, target = get_params(command, opcodes)
-  opcodes[target] = a == b ? 1 : 0
-end
-
-def get_params(command, opcodes)
-  padded = sprintf('%05d', command[0].to_s)
-
-  a = padded[2] == '0' ? opcodes[command[1]] : command[1]
-  b = padded[1] == '0' ? opcodes[command[2]] : command[2]
-
-  return a, b, command[3]
-end
-
-position = 0
-
-loop do
-  command = opcodes.slice(position, 4)
-
-  case command[0].digits.first
-  when 1
-    add(command, opcodes)
-    position += 4
-  when 2
-    multiply(command, opcodes)
-    position += 4
-  when 3
-    opcodes[command[1]] = 5
-    position += 2
-  when 4
-    a, _, _ = get_params(command, opcodes)
-    p a
-    position += 2
-  when 5
-    position = jump_if_true(command, opcodes, position)
-  when 6
-    position = jump_if_false(command, opcodes, position)
-  when 7
-    less_than(command, opcodes)
-    position += 4
-  when 8
-    equals(command, opcodes)
-    position += 4
-  else
-    break
-  end
-end
+p output.last

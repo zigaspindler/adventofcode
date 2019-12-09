@@ -45,49 +45,13 @@
 
 # After providing 1 to the only input instruction and passing all the tests, what diagnostic code does the program produce?
 
-input = File.read('input.txt').strip
+require '../lib/intcode'
 
+input = File.read('input.txt').strip
 opcodes = input.split(',').map(&:to_i)
 
-def add(command, opcodes)
-  a, b, target = get_params(command, opcodes)
-  opcodes[target] = a + b
-end
+output = []
 
-def multiply(command, opcodes)
-  a, b, target = get_params(command, opcodes)
-  opcodes[target] = a * b
-end
+Intcode.new(opcodes, input: [1], output: output).run
 
-def get_params(command, opcodes)
-  padded = sprintf('%05d', command[0].to_s)
-
-  a = padded[2] == '0' ? opcodes[command[1]] : command[1]
-  b = padded[1] == '0' ? opcodes[command[2]] : command[2]
-
-  return a, b, command[3]
-end
-
-position = 0
-
-loop do
-  command = opcodes.slice(position, 4)
-
-  case command[0].digits.first
-  when 1
-    add(command, opcodes)
-    position += 4
-  when 2
-    multiply(command, opcodes)
-    position += 4
-  when 3
-    opcodes[command[1]] = 1
-    position += 2
-  when 4
-    a, _, _ = get_params(command, opcodes)
-    p a
-    position += 2
-  else
-    break
-  end
-end
+p output.last
