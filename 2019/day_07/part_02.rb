@@ -32,83 +32,10 @@
 # 53,1001,56,-1,56,1005,56,6,99,0,0,0,0,10
 # Try every combination of the new phase settings on the amplifier feedback loop. What is the highest signal that can be sent to the thrusters?
 
+require '../lib/intcode'
+
 input = File.read('input.txt').strip
-original_opcodes = input.split(',').map(&:to_i)
-
-def add(command, opcodes)
-  a, b, target = get_params(command, opcodes)
-  opcodes[target] = a + b
-end
-
-def multiply(command, opcodes)
-  a, b, target = get_params(command, opcodes)
-  opcodes[target] = a * b
-end
-
-def jump_if_true(command, opcodes, position)
-  a, b, _ = get_params(command, opcodes)
-  a != 0 ? b : (position + 3)
-end
-
-def jump_if_false(command, opcodes, position)
-  a, b, _ = get_params(command, opcodes)
-  a == 0 ? b : (position + 3)
-end
-
-def less_than(command, opcodes)
-  a, b, target = get_params(command, opcodes)
-  opcodes[target] = a < b ? 1 : 0
-end
-
-def equals(command, opcodes)
-  a, b, target = get_params(command, opcodes)
-  opcodes[target] = a == b ? 1 : 0
-end
-
-def get_params(command, opcodes)
-  padded = sprintf('%05d', command[0].to_s)
-
-  a = padded[2] == '0' ? opcodes[command[1]] : command[1]
-  b = padded[1] == '0' ? opcodes[command[2]] : command[2]
-
-  return a, b, command[3]
-end
-
-def run(opcodes, input, output)
-  position = 0
-
-  loop do
-    command = opcodes.slice(position, 4)
-  
-    case command[0].digits.first
-    when 1
-      add(command, opcodes)
-      position += 4
-    when 2
-      multiply(command, opcodes)
-      position += 4
-    when 3
-      opcodes[command[1]] = input.shift
-      position += 2
-    when 4
-      a, _, _ = get_params(command, opcodes)
-      position += 2
-      output.push(a)
-    when 5
-      position = jump_if_true(command, opcodes, position)
-    when 6
-      position = jump_if_false(command, opcodes, position)
-    when 7
-      less_than(command, opcodes)
-      position += 4
-    when 8
-      equals(command, opcodes)
-      position += 4
-    else
-      break
-    end
-  end
-end
+opcodes = input.split(',').map(&:to_i)
 
 max_thrust = 0
 
@@ -117,11 +44,12 @@ max_thrust = 0
 
   threads = per.map.with_index { |_,i|
     Thread.new do
-      run(
-        original_opcodes.dup,
-        channels[i],
-        channels[(i + 1) % channels.length]
+      worker = Intcode.new(
+        opcodes,
+        input: channels[i],
+        output: channels[(i + 1) % channels.length]
       )
+      worker.run
     end
   }
 

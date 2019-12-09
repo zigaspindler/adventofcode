@@ -38,98 +38,21 @@
 # 1002,33,7,33,1,33,31,31,1,32,31,31,4,31,99,0,0,0
 # Try every combination of phase settings on the amplifiers. What is the highest signal that can be sent to the thrusters?
 
+require '../lib/intcode'
+
 input = File.read('input.txt').strip
 
-original_opcodes = input.split(',').map(&:to_i)
-
-def add(command, opcodes)
-  a, b, target = get_params(command, opcodes)
-  opcodes[target] = a + b
-end
-
-def multiply(command, opcodes)
-  a, b, target = get_params(command, opcodes)
-  opcodes[target] = a * b
-end
-
-def jump_if_true(command, opcodes, position)
-  a, b, _ = get_params(command, opcodes)
-  a != 0 ? b : (position + 3)
-end
-
-def jump_if_false(command, opcodes, position)
-  a, b, _ = get_params(command, opcodes)
-  a == 0 ? b : (position + 3)
-end
-
-def less_than(command, opcodes)
-  a, b, target = get_params(command, opcodes)
-  opcodes[target] = a < b ? 1 : 0
-end
-
-def equals(command, opcodes)
-  a, b, target = get_params(command, opcodes)
-  opcodes[target] = a == b ? 1 : 0
-end
-
-def get_params(command, opcodes)
-  padded = sprintf('%05d', command[0].to_s)
-
-  a = padded[2] == '0' ? opcodes[command[1]] : command[1]
-  b = padded[1] == '0' ? opcodes[command[2]] : command[2]
-
-  return a, b, command[3]
-end
-
-def run(opcodes, input_1, input_2)
-  position = 0
-  used_input_1 = false
-  
-  loop do
-    command = opcodes.slice(position, 4)
-  
-    case command[0].digits.first
-    when 1
-      add(command, opcodes)
-      position += 4
-    when 2
-      multiply(command, opcodes)
-      position += 4
-    when 3
-      opcodes[command[1]] = used_input_1 ? input_2 : input_1
-      used_input_1 = true
-      position += 2
-    when 4
-      a, _, _ = get_params(command, opcodes)
-      return a
-      position += 2
-    when 5
-      position = jump_if_true(command, opcodes, position)
-    when 6
-      position = jump_if_false(command, opcodes, position)
-    when 7
-      less_than(command, opcodes)
-      position += 4
-    when 8
-      equals(command, opcodes)
-      position += 4
-    else
-      break
-    end
-  end
-end
+opcodes = input.split(',').map(&:to_i)
 
 max_thrust = 0
 
 [0, 1, 2, 3, 4].permutation.each do |per|
-  thrust = 0
+  input = [0]
   per.each do |i|
-    thrust = run(original_opcodes.dup, i, thrust)
+    Intcode.new(opcodes, input: [i, input.shift], output: input).run
   end
 
-  if thrust > max_thrust
-    max_thrust = thrust
-  end
+  max_thrust = [max_thrust, input.last].max
 end
 
 p max_thrust
