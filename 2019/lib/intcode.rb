@@ -1,6 +1,6 @@
 class Intcode
   def initialize(opcodes, input: [], output: [])
-    @opcodes = opcodes.dup
+    @opcodes = opcodes
     @position = 0
     @input = input
     @output = output

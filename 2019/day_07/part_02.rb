@@ -45,7 +45,7 @@ max_thrust = 0
   threads = per.map.with_index { |_,i|
     Thread.new do
       worker = Intcode.new(
-        opcodes,
+        opcodes.dup,
         input: channels[i],
         output: channels[(i + 1) % channels.length]
       )

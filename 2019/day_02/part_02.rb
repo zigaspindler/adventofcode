@@ -17,6 +17,8 @@
 
 # Find the input noun and verb that cause the program to produce the output 19690720. What is 100 * noun + verb? (For example, if noun=12 and verb=2, the answer would be 1202.)
 
+require '../lib/intcode'
+
 input = File.read('input.txt').strip
 
 org_opcodes = input.split(',').map(&:to_i)
@@ -37,25 +39,11 @@ end
 for noun in 0..99
   for verb in 0..99
     # set initial state
-    opcodes = org_opcodes.clone()
+    opcodes = org_opcodes.dup
     opcodes[1] = noun
     opcodes[2] = verb
-    position = 0
 
-    loop do
-      command = opcodes.slice(position, 4)
-    
-      case command[0]
-      when 1
-        opcodes = add(*command, opcodes)
-      when 2
-        opcodes = multiply(*command, opcodes)
-      else
-        break
-      end
-    
-      position += 4
-    end
+    Intcode.new(opcodes).run
 
     if opcodes[0] == 19690720
       p 100 * noun + verb

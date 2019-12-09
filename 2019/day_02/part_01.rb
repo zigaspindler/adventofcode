@@ -44,41 +44,16 @@
 # 1,1,1,4,99,5,6,0,99 becomes 30,1,1,4,2,5,6,0,99.
 # Once you have a working computer, the first step is to restore the gravity assist program (your puzzle input) to the "1202 program alarm" state it had just before the last computer caught fire. To do this, before running the program, replace position 1 with the value 12 and replace position 2 with the value 2. What value is left at position 0 after the program halts?
 
+require '../lib/intcode'
+
 input = File.read('input.txt').strip
 
 opcodes = input.split(',').map(&:to_i)
-
-def add(_, a, b, target, opcodes)
-  opcodes[target] = opcodes[a] + opcodes[b]
-
-  opcodes
-end
-
-def multiply(_, a, b, target, opcodes)
-  opcodes[target] = opcodes[a] * opcodes[b]
-
-  opcodes
-end
 
 # set initial state
 opcodes[1] = 12
 opcodes[2] = 2
 
-position = 0
-
-loop do
-  command = opcodes.slice(position, 4)
-
-  case command[0]
-  when 1
-    opcodes = add(*command, opcodes)
-  when 2
-    opcodes = multiply(*command, opcodes)
-  else
-    break
-  end
-
-  position += 4
-end
+Intcode.new(opcodes).run
 
 p opcodes[0]

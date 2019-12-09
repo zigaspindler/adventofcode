@@ -49,7 +49,7 @@ max_thrust = 0
 [0, 1, 2, 3, 4].permutation.each do |per|
   input = [0]
   per.each do |i|
-    Intcode.new(opcodes, input: [i, input.shift], output: input).run
+    Intcode.new(opcodes.dup, input: [i, input.shift], output: input).run
   end
 
   max_thrust = [max_thrust, input.last].max
