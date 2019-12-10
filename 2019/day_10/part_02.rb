@@ -119,14 +119,10 @@ while not_sorted.any?
   else
     sorted << current
   end
-
-  if not_sorted.all? { |ns| ns.rad == sorted.last.rad }
-    sorted += not_sorted.sort { |a, b| a.distance <=> b.distance }
-
-    not_sorted = []
-  end
+  
+  break if sorted.length == 200
 end
 
-target =  sorted[199]
+target =  sorted.last
 
 p (target.x + position[0]) * 100 + position[1] - target.y
