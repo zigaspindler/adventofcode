@@ -1,5 +1,3 @@
-use std::fs;
-
 pub struct PartOne;
 pub struct PartTwo;
 
@@ -11,7 +9,7 @@ impl PartOne {
 
 #[test]
 fn example_1() {
-  let input = fs::read_to_string("resources/example.txt").expect("Something went wrong reading the file");
+  let input = std::fs::read_to_string("resources/example.txt").expect("Something went wrong reading the file");
   assert_eq!(PartOne::solve(&input), 7);
 }
 
@@ -25,7 +23,7 @@ impl PartTwo {
 
 #[test]
 fn example_2() {
-  let input = fs::read_to_string("resources/example.txt").expect("Something went wrong reading the file");
+  let input = std::fs::read_to_string("resources/example.txt").expect("Something went wrong reading the file");
   assert_eq!(PartTwo::solve(&input), 336);
 }
 
