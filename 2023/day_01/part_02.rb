@@ -14,22 +14,6 @@
 
 # What is the sum of all of the calibration values?
 
-word_to_number = proc do |word|
-  case word
-  when 'one' then 1
-  when 'two' then 2
-  when 'three' then 3
-  when 'four' then 4
-  when 'five' then 5
-  when 'six' then 6
-  when 'seven' then 7
-  when 'eight' then 8
-  when 'nine' then 9
-  else
-    word
-  end
-end
-
 p File.readlines('input.txt').inject(0) { |sum, line|
   line = line.gsub('one', 'o1e')
              .gsub('two', 't2')
